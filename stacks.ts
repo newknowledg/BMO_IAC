@@ -1,10 +1,10 @@
-import ( Construct ) from 'constructs';
+import { Construct } from 'constructs';
 import * as cdktf from 'cdktf';
 import { AwsProvider } from '@cdktf/provider-aws/lib/provider';
 import { EcsCluster, EcsService, EcsTaskDefinition} from '@cdktf/provider-aws/lib/ecs';
 import { Alb, LbListener, LbTargetGroup } from '@cdktf/provider-aws/lib/elb';
 import { SecurityGroup } from '@cdktf/provider-aws/lib/vpc';
-import { GlobalConfig } from  '../configs';
+//import { GlobalConfig } from  '../configs';
 
 
 interface BaseStackProps {
