@@ -23,8 +23,9 @@ jobs:
           node-version: 18.12.0
       - name: install dependencies
         run: |
-          npm install -g cdktf-cli@latest
+          npm install -g cdktf-cli
           npm install
+          npm install -global cdktf-cli@latest
       - name: Config credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
