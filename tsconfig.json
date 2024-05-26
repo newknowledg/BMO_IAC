@@ -19,8 +19,8 @@
         "resolveJsonModule": true,
         "strict": true,
         "strictNullChecks": true,
-        "StrictPropertyInitialization": true,
-        "stipInternal": true,
+        "strictPropertyInitialization": true,
+        "stripInternal": true,
         "target": "ES2018",
         "incremental": true,
         "skipLibCheck": true
