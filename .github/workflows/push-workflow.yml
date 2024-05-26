@@ -33,5 +33,5 @@ jobs:
           aws-region: us-east-2
       - name: CDKTF init
         run: |
-          cdktf --app "npx ts-node" stacks.ts synth
-          cdktf --app "npx ts-node" stacks.ts deploy
+          cdktf --app "npx ts-node stacks.ts" synth
+          cdktf --app "npx ts-node stacks.ts" deploy
