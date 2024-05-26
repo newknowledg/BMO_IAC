@@ -7,7 +7,8 @@ import { EcsCluster } from '@cdktf/provider-aws/lib/ecs-cluster';
 import { Alb } from '@cdktf/provider-aws/lib/alb';
 import { AlbTargetGroup } from '@cdktf/provider-aws/lib/alb-target-group';
 import { AlbListener } from '@cdktf/provider-aws/lib/alb-listener';
-import { SecurityGroup } from '@cdktf/provider-aws/lib/vpc';
+import { SecurityGroup } from '@cdktf/provider-aws/lib/security-group';
+import { DbInstance } from '@cdktf/provider-aws/lib/db-instance';
 
 
 interface BaseStackProps {
@@ -45,7 +46,7 @@ class AwsStackBase extends cdktf.TerraformStack {
 
         new cdktf.S3Backend(this, {
             bucket: bucketName,
-            key: `${baseProps.project}/${baseProps.name}`,
+            key: `${baseProps.project}/${id}`,
             region: `${baseProps.region}`
         });
 
@@ -68,7 +69,7 @@ class sgStack extends AwsStackBase {
     constructor(scope: Construct, id: string, props: BaseStackProps) {
         super(scope, `${props.name}-security-group`)
         this.sg = new SecurityGroup(this,  `${props.name}-security-group`, {
-            name: sgConfigs.name,
+            name: props.name,
             ingress: [
                 {
                     protocol: "TCP",
