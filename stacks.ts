@@ -1,10 +1,13 @@
 import { Construct } from 'constructs';
 import * as cdktf from 'cdktf';
 import { AwsProvider } from '@cdktf/provider-aws/lib/provider';
-import { EcsCluster, EcsService, EcsTaskDefinition} from '@cdktf/provider-aws/lib/ecs';
-import { Alb, LbListener, LbTargetGroup } from '@cdktf/provider-aws/lib/elb';
+import { EcsService } from '@cdktf/provider-aws/lib/ecs-service';
+import { EcsTaskDefinition} from '@cdktf/provider-aws/lib/ecs-task-definition';
+import { EcsCluster } from '@cdktf/provider-aws/lib/ecs-cluster';
+import { Alb } from '@cdktf/provider-aws/lib/alb';
+import { AlbTargetGroup } from '@cdktf/provider-aws/lib/alb-target-group';
+import { AlbListener } from '@cdktf/provider-aws/lib/alb-listener';
 import { SecurityGroup } from '@cdktf/provider-aws/lib/vpc';
-//import { GlobalConfig } from  '../configs';
 
 
 interface BaseStackProps {
@@ -33,7 +36,7 @@ const StackProps: BaseStackProps = {
 
 class AwsStackBase extends cdktf.TerraformStack {
 //    private _provider: cdktf.TerraformProvider;
-    constructor(scope: construct, id: string, baseProps: BaseStackProps) {
+    constructor(scope: Construct, id: string, baseProps: BaseStackProps) {
         super(scope, baseProps.name);
         new AwsProvider(this, 'aws', {
             region: baseProps.region
@@ -52,7 +55,7 @@ class AwsStackBase extends cdktf.TerraformStack {
 
 class EcsClusterStack extends AwsStackBase {
     public cluster: EcsCluster
-    constructor(scope: construct, id: string, props: BaseStackProps) {
+    constructor(scope: Construct, id: string, props: BaseStackProps) {
         super(scope, `${props.name}-ecs-cluster`)
          this.cluster = new EcsCluster(this, `${props.name}-ecs-cluster`, {
             name: "bmo-iac-cluster"
@@ -62,7 +65,7 @@ class EcsClusterStack extends AwsStackBase {
 
 class sgStack extends AwsStackBase {
     public sg: SecurityGroup;
-    constructor(scope: construct, id: string, props: BaseStackProps) {
+    constructor(scope: Construct, id: string, props: BaseStackProps) {
         super(scope, `${props.name}-security-group`)
         this.sg = new SecurityGroup(this,  `${props.name}-security-group`, {
             name: sgConfigs.name,
@@ -81,7 +84,7 @@ class sgStack extends AwsStackBase {
 
 class dbStack extends AwsStackBase {
     public db: DbInstance;
-    constructor(scope: construct, id: string, props: BaseStackProps) {
+    constructor(scope: Construct, id: string, props: BaseStackProps) {
         super(scope,  `${props.name}-database`)
         this.db = new DbInstance(this, `${props.name}-database`, {
             dbName: BaseStackProps.name,
@@ -97,7 +100,7 @@ class dbStack extends AwsStackBase {
 
 class taskDefinitionStack extends AwsStackBase {
     public td: TaskDefinition;
-    constructor(scope: constructor, id: string, props: BaseStackProps) {
+    constructor(scope: Constructor, id: string, props: BaseStackProps) {
         super(scope,  `${props.name}-task-definition`
         this.td = new EcsTaskDefinition(this, `${props.name}-task-definition`, {
             family: `${props.name}-client`,
@@ -149,9 +152,9 @@ class taskDefinitionStack extends AwsStackBase {
 
 class loadBalancerStack extends AwsStackBase {
     public lb: Alb;
-    public lbl: LbListener;
-    public targetGroup: LbTargetGroup;
-    constructor(scope: constructor, id: string, props: BaseStackProps) {
+    public lbl: AlbListener;
+    public targetGroup: AlbTargetGroup;
+    constructor(scope: Constructor, id: string, props: BaseStackProps) {
         super(scope, `${props.name}-security-group`)
 
         this.lb = new Alb (this, `${props.name}-load-balancer`, {
@@ -163,7 +166,7 @@ class loadBalancerStack extends AwsStackBase {
             ipAddressType: "dualstack",
         })
 
-        this.targetGroup = new elb.LbTargetGroup(this,  `${props.name}-target-group`, {
+        this.targetGroup = new AlbTargetGroup(this,  `${props.name}-target-group`, {
           namePrefix: "cl-",
           port: 80,
           protocol: "HTTP",
@@ -182,7 +185,7 @@ class loadBalancerStack extends AwsStackBase {
           }
         })
 
-        this.lbl = new elb.LbListener(this, `${props.name}-listener`, {
+        this.lbl = new AlbListener(this, `${props.name}-listener`, {
           loadBalancerArn: this.lb.arn,
           port: 80,
           protocol: "HTTP",
@@ -199,7 +202,7 @@ class loadBalancerStack extends AwsStackBase {
 }
 
 class EcsServiceStack extends AwsStackBase {
-    constructor(scope: construct, id: string, props: BaseStackProps) {
+    constructor(scope: Construct, id: string, props: BaseStackProps) {
         super(scope,`${props.name}-service` )
         new EcsService(this,`${props.name}-service`, {
             cluster: props.cluster.arn,

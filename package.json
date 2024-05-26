@@ -6,7 +6,7 @@
     "private": true,
     "scripts": {
         "build": "tsc",
-        "upgrade": "npm i cdktf@latest cdktf-cli@latest"       
+        "upgrade": "npm i cdktf@latest cdktf-cli@latest"
     },
     "engines": {
         "node": ">=16.0"
@@ -14,6 +14,7 @@
     "dependencies": {
         "@cdktf/provider-aws": "19.19.0",
         "cdktf": "^0.20.0",
+        "cdktf-cli": "^0.20.7",
         "constructs": "^10.2.70"
     }
 }
