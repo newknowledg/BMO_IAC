@@ -25,7 +25,6 @@ jobs:
         run: |
           npm install -g cdktf-cli@latest
           npm install
-      - 
       - name: Config credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
