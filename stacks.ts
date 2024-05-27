@@ -99,7 +99,7 @@ class sgStack extends AwsStackBase {
 
 class dbStack extends AwsStackBase {
     public db: DbInstance;
-    constructor(scope: Construct, id: string, props: BaseStackProps) {
+    constructor(scope: Construct, id: string, props: DbConfigs) {
         super(scope,  `${props.name}-${id}`, {
             name: "bmo-test",
             project: "bmo-iac",
@@ -337,7 +337,6 @@ class EcsServiceStack extends AwsStackBase {
 const app = new App();
 const cluster = new EcsClusterStack(app, "ecs-cluster-stack", StackProps);
 const sGroup = new sgStack(app, "sg-stack", StackProps);
-const db = new dbStack(app, "db-stack", StackProps);
 
 const DbConfig: DbConfigs = {
     name: "bmo-test",
@@ -346,6 +345,8 @@ const DbConfig: DbConfigs = {
     dbName: db.db.address,
     dbAddress: db.db.dbName,
 }
+
+const db = new dbStack(app, "db-stack", DbConfig);
 
 const LbConfig: LbConfigs = {
     name: "bmo-test",
