@@ -35,4 +35,8 @@ jobs:
       - name: CDKTF init
         run: |
           cdktf --app "npx ts-node stacks.ts" synth
-          cdktf --app "npx ts-node stacks.ts" deploy
+          STACKS = $(ls cdktf.out/stacks/)
+          for stack in $STACKS; do
+            cdktf --app "npx ts-node stacks.ts" deploy $stack
+          done
+
