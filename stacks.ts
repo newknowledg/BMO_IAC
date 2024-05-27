@@ -1,5 +1,6 @@
 import { Construct } from 'constructs';
 import * as cdktf from 'cdktf';
+import { App } from 'cdktf';
 import { AwsProvider } from '@cdktf/provider-aws/lib/provider';
 import { EcsService } from '@cdktf/provider-aws/lib/ecs-service';
 import { EcsTaskDefinition} from '@cdktf/provider-aws/lib/ecs-task-definition';
@@ -22,6 +23,10 @@ interface DbConfigs extends BaseStackProps {
     dbName: string,
 }
 
+interface DbConfigs extends BaseStackProps {
+    securityGroup: string,
+}
+
 interface EcsServiceConfigs extends BaseStackProps {
     cluster: string,
     taskDefinition: string,
@@ -38,7 +43,11 @@ const StackProps: BaseStackProps = {
 class AwsStackBase extends cdktf.TerraformStack {
 //    private _provider: cdktf.TerraformProvider;
     constructor(scope: Construct, id: string, baseProps: BaseStackProps) {
-        super(scope, baseProps.name);
+        super(scope, baseProps.name, {
+            name: "bmo-test",
+            project: "bmo-iac",
+            region: "us-east-2"
+        });
         new AwsProvider(this, 'aws', {
             region: baseProps.region
         })
@@ -57,7 +66,11 @@ class AwsStackBase extends cdktf.TerraformStack {
 class EcsClusterStack extends AwsStackBase {
     public cluster: EcsCluster
     constructor(scope: Construct, id: string, props: BaseStackProps) {
-        super(scope, `${props.name}-ecs-cluster`)
+        super(scope, `${props.name}-ecs-cluster`, {
+            name: "bmo-test",
+            project: "bmo-iac",
+            region: "us-east-2"
+        })
          this.cluster = new EcsCluster(this, `${props.name}-ecs-cluster`, {
             name: "bmo-iac-cluster"
         });
@@ -67,7 +80,11 @@ class EcsClusterStack extends AwsStackBase {
 class sgStack extends AwsStackBase {
     public sg: SecurityGroup;
     constructor(scope: Construct, id: string, props: BaseStackProps) {
-        super(scope, `${props.name}-security-group`)
+        super(scope, `${props.name}-security-group`, {
+            name: "bmo-test",
+            project: "bmo-iac",
+            region: "us-east-2"
+        })
         this.sg = new SecurityGroup(this,  `${props.name}-security-group`, {
             name: props.name,
             ingress: [
@@ -86,7 +103,11 @@ class sgStack extends AwsStackBase {
 class dbStack extends AwsStackBase {
     public db: DbInstance;
     constructor(scope: Construct, id: string, props: BaseStackProps) {
-        super(scope,  `${props.name}-database`)
+        super(scope,  `${props.name}-database`, {
+            name: "bmo-test",
+            project: "bmo-iac",
+            region: "us-east-2"
+        })
         this.db = new DbInstance(this, `${props.name}-database`, {
             dbName: props.name,
             username: `${process.env.USER}`,
@@ -102,13 +123,17 @@ class dbStack extends AwsStackBase {
 class taskDefinitionStack extends AwsStackBase {
     public td: EcsTaskDefinition;
     constructor(scope: Construct, id: string, props: BaseStackProps) {
-        super(scope,  `${props.name}-task-definition`)
+        super(scope,  `${props.name}-task-definition`, {
+            name: "bmo-test",
+            project: "bmo-iac",
+            region: "us-east-2"
+        })
         this.td = new EcsTaskDefinition(this, `${props.name}-task-definition`, {
             family: `${props.name}-client`,
             memory: "512",
             cpu: "256",
             networkMode: "awsvpc",
-            executionRoleArn,
+            executionRoleArn: ,
 
             containerDefinitions: Fn.jsonencode([
               {
@@ -155,14 +180,18 @@ class loadBalancerStack extends AwsStackBase {
     public lb: Alb;
     public lbl: AlbListener;
     public targetGroup: AlbTargetGroup;
-    constructor(scope: Constructor, id: string, props: BaseStackProps) {
-        super(scope, `${props.name}-security-group`)
+    constructor(scope: Construct, id: string, props: BaseStackProps) {
+        super(scope, `${props.name}-security-group`, {
+            name: "bmo-test",
+            project: "bmo-iac",
+            region: "us-east-2"
+        })
 
         this.lb = new Alb (this, `${props.name}-load-balancer`, {
-            securityGroups: [props.sg],
+            securityGroups: [props.securityGroup],
             namePrefix: "cl-",
             loadBalancerType: "application",
-            //subnets: subnets.map((subnet) => subnet.id),
+            //subnets: "0.0.0.0/0",
             idleTimeout: 60,
             ipAddressType: "dualstack",
         })
@@ -204,7 +233,11 @@ class loadBalancerStack extends AwsStackBase {
 
 class EcsServiceStack extends AwsStackBase {
     constructor(scope: Construct, id: string, props: EcsServiceConfigs) {
-        super(scope,`${props.name}-service` )
+        super(scope,`${props.name}-service` , {
+            name: "bmo-test",
+            project: "bmo-iac",
+            region: "us-east-2"
+        })
         new EcsService(this,`${props.name}-service`, {
             cluster: props.cluster,
             taskDefinition: props.taskDefinition,
@@ -218,6 +251,7 @@ class EcsServiceStack extends AwsStackBase {
             ],
             networkConfiguration: {
                 assignPublicIp: false,
+                subnets: "0.0.0.0/0",
                 securityGroups: [props.securityGroup]
             }
 
@@ -231,20 +265,27 @@ const sGroup = new sgStack(app, "sg-stack", StackProps);
 const db = new dbStack(app, "db-stack", StackProps):
 
 const DbConfig: DbConfigs = {
-    name: "bmo-test",
-    project: "bmo-iac",
-    region: "us-east-2"
+//    name: "bmo-test",
+//    project: "bmo-iac",
+//    region: "us-east-2"
     dbName: db.db.address,
     dbAddress: db.db.dbName,
+}
+
+const LbConfig: LbConfigs = {
+//    name: "bmo-test",
+//    project: "bmo-iac",
+//    region: "us-east-2"
+    securityGroup: sGroup.sg.id,
 }
 
 const taskDefinition = new taskDefinitionStack(app, "td-stack", DbConfig);
 const lb = new loadBalancerStack(app, "lb-stack", StackProps);
 
 const EcsConfig: EcsServiceConfigs = {
-    name: "bmo-test",
-    project: "bmo-iac",
-    region: "us-east-2"
+//    name: "bmo-test",
+//    project: "bmo-iac",
+//    region: "us-east-2"
     cluster: cluster.cluster.arn,
     taskDefinition: taskDefinition.td.arn,
     targetGroup: lb.targetGroup.arn,
