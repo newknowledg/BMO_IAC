@@ -88,8 +88,8 @@ class sgStack extends AwsStackBase {
             ingress: [
                 {
                     protocol: "TCP",
-                    fromPort: 80,
-                    toPort: 80,
+                    fromPort: 8080,
+                    toPort: 8080,
                     cidrBlocks: ["0.0.0.0/0"],
                     ipv6CidrBlocks: ["::/0"]
                 }
@@ -232,8 +232,8 @@ class taskDefinitionStack extends AwsStackBase {
                 essential: true,
                 portMappings: [
                   {
-                    containerPort: 80,
-                    hostPort: 80,
+                    containerPort: 8080,
+                    hostPort: 8080,
                     protocol: "tcp",
                   },
                 ],
@@ -300,7 +300,7 @@ class loadBalancerStack extends AwsStackBase {
 
         this.targetGroup = new AlbTargetGroup(this,  `${props.name}-target-group`, {
           namePrefix: "cl-",
-          port: 80,
+          port: 8080,
           protocol: "HTTP",
           vpcId: `${process.env.VPC_ID}`,
           deregistrationDelay: "30",
