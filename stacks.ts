@@ -1,6 +1,6 @@
 import { Construct } from 'constructs';
 import * as cdktf from 'cdktf';
-import { App } from 'cdktf';
+import { App, Fn } from 'cdktf';
 import { AwsProvider } from '@cdktf/provider-aws/lib/provider';
 import { EcsService } from '@cdktf/provider-aws/lib/ecs-service';
 import { EcsTaskDefinition} from '@cdktf/provider-aws/lib/ecs-task-definition';
@@ -23,7 +23,7 @@ interface DbConfigs extends BaseStackProps {
     dbName: string,
 }
 
-interface DbConfigs extends BaseStackProps {
+interface LbConfigs extends BaseStackProps {
     securityGroup: string,
 }
 
@@ -43,11 +43,7 @@ const StackProps: BaseStackProps = {
 class AwsStackBase extends cdktf.TerraformStack {
 //    private _provider: cdktf.TerraformProvider;
     constructor(scope: Construct, id: string, baseProps: BaseStackProps) {
-        super(scope, baseProps.name, {
-            name: "bmo-test",
-            project: "bmo-iac",
-            region: "us-east-2"
-        });
+        super(scope, baseProps.name );
         new AwsProvider(this, 'aws', {
             region: baseProps.region
         })
@@ -180,7 +176,7 @@ class loadBalancerStack extends AwsStackBase {
     public lb: Alb;
     public lbl: AlbListener;
     public targetGroup: AlbTargetGroup;
-    constructor(scope: Construct, id: string, props: BaseStackProps) {
+    constructor(scope: Construct, id: string, props: LbConfigs) {
         super(scope, `${props.name}-security-group`, {
             name: "bmo-test",
             project: "bmo-iac",
@@ -262,20 +258,20 @@ class EcsServiceStack extends AwsStackBase {
 const app = new App();
 const cluster = new EcsClusterStack(app, "ecs-cluster-stack", StackProps);
 const sGroup = new sgStack(app, "sg-stack", StackProps);
-const db = new dbStack(app, "db-stack", StackProps):
+const db = new dbStack(app, "db-stack", StackProps);
 
 const DbConfig: DbConfigs = {
-//    name: "bmo-test",
-//    project: "bmo-iac",
-//    region: "us-east-2"
+    name: "bmo-test",
+    project: "bmo-iac",
+    region: "us-east-2"
     dbName: db.db.address,
     dbAddress: db.db.dbName,
 }
 
 const LbConfig: LbConfigs = {
-//    name: "bmo-test",
-//    project: "bmo-iac",
-//    region: "us-east-2"
+    name: "bmo-test",
+    project: "bmo-iac",
+    region: "us-east-2"
     securityGroup: sGroup.sg.id,
 }
 
@@ -283,9 +279,9 @@ const taskDefinition = new taskDefinitionStack(app, "td-stack", DbConfig);
 const lb = new loadBalancerStack(app, "lb-stack", StackProps);
 
 const EcsConfig: EcsServiceConfigs = {
-//    name: "bmo-test",
-//    project: "bmo-iac",
-//    region: "us-east-2"
+    name: "bmo-test",
+    project: "bmo-iac",
+    region: "us-east-2"
     cluster: cluster.cluster.arn,
     taskDefinition: taskDefinition.td.arn,
     targetGroup: lb.targetGroup.arn,
