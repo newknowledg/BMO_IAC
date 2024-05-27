@@ -265,7 +265,7 @@ class taskDefinitionStack extends AwsStackBase {
                   },
                   {
                     name: "WORDPRESS_DB_PORT",
-                    value: "80",
+                    value: "8080",
                   },
                   {
                     name: "WORDPRESS_DB_NAME",
@@ -319,7 +319,7 @@ class loadBalancerStack extends AwsStackBase {
 
         this.lbl = new AlbListener(this, `${props.name}-listener`, {
           loadBalancerArn: this.lb.arn,
-          port: 80,
+          port: 8080,
           protocol: "HTTP",
 
           defaultAction: [
@@ -351,7 +351,7 @@ class EcsServiceStack extends AwsStackBase {
                 {
                     targetGroupArn: props.targetGroup,
                     containerName: "client",
-                    containerPort: 80,
+                    containerPort: 8080,
                 },
             ],
             networkConfiguration: {
