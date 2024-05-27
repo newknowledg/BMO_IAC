@@ -234,7 +234,7 @@ class taskDefinitionStack extends AwsStackBase {
             containerDefinitions: Fn.jsonencode([
               {
                 name: "client",
-                image: "wordpress:php8.3",
+                image: "wordpress:latest",
                 essential: true,
                 portMappings: [
                   {
@@ -379,7 +379,7 @@ class EcsServiceStack extends AwsStackBase {
                 },
             ],
             networkConfiguration: {
-                assignPublicIp: false,
+                assignPublicIp: true,
                 subnets: [`${process.env.SUBNET}`, `${process.env.SUBNET_2}`],
                 securityGroups: [props.securityGroup]
             }
