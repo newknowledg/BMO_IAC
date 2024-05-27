@@ -93,7 +93,17 @@ class sgStack extends AwsStackBase {
                     cidrBlocks: ["0.0.0.0/0"],
                     ipv6CidrBlocks: ["::/0"]
                 }
-            ]
+            ],
+            egress: [
+              // allow all traffic to every destination
+              {
+                fromPort: 0,
+                toPort: 0,
+                protocol: "-1",
+                cidrBlocks: ["0.0.0.0/0"],
+                ipv6CidrBlocks: ["::/0"],
+              },
+            ],
         });
     }
 }
