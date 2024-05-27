@@ -2,6 +2,7 @@ import { Construct } from 'constructs';
 import * as cdktf from 'cdktf';
 import { App, Fn } from 'cdktf';
 import { AwsProvider } from '@cdktf/provider-aws/lib/provider';
+import { IamRole } from '@cdktf/provider-aws/lib/iam-role';
 import { EcsService } from '@cdktf/provider-aws/lib/ecs-service';
 import { EcsTaskDefinition} from '@cdktf/provider-aws/lib/ecs-task-definition';
 import { EcsCluster } from '@cdktf/provider-aws/lib/ecs-cluster';
@@ -127,7 +128,6 @@ class taskDefinitionStack extends AwsStackBase {
 
         const executionRole = new IamRole(this, `${props.name}-execution-role`, {
           name: `${props.name}-execution-role`,
-          tags,
           inlinePolicy: [
             {
               name: "allow-ecr-pull",
@@ -167,7 +167,6 @@ class taskDefinitionStack extends AwsStackBase {
 
         const taskRole = new IamRole(this, `${props.name}-task-role`, {
           name: `${props.name}-task-role`,
-          tags,
           inlinePolicy: [
             {
               name: "allow-logs",
@@ -321,7 +320,7 @@ class EcsServiceStack extends AwsStackBase {
                     containerPort: 80,
                 },
             ],
-            networkConfiguration: {
+            EcsNetworkConfiguration: {
                 assignPublicIp: false,
                 subnets: ["0.0.0.0/0"],
                 securityGroups: [props.securityGroup]
