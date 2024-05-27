@@ -343,8 +343,8 @@ const DbConfig: DbConfigs = {
     name: "bmo-test",
     project: "bmo-iac",
     region: "us-east-2",
-    dbName: db.db.address,
-    dbAddress: db.db.dbName,
+    dbAddress: db.db.address,
+    dbName: db.db.dbName,
 }
 
 const LbConfig: LbConfigs = {
