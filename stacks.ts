@@ -73,8 +73,8 @@ class sgStack extends AwsStackBase {
             ingress: [
                 {
                     protocol: "TCP",
-                    fromPort: "80",
-                    toPort: "80",
+                    fromPort: 80,
+                    toPort: 80,
                     cidrBlocks: ["0.0.0.0/0"],
                     ipv6CidrBlocks: ["::/0"]
                 }
@@ -88,10 +88,10 @@ class dbStack extends AwsStackBase {
     constructor(scope: Construct, id: string, props: BaseStackProps) {
         super(scope,  `${props.name}-database`)
         this.db = new DbInstance(this, `${props.name}-database`, {
-            dbName: BaseStackProps.name,
+            dbName: props.name,
             username: `${process.env.USER}`,
             password: `${process.env.PASS}`,
-            enginge: "postgresql",
+            engine: "postgresql",
             publiclyAccessible: false,
             instanceClass: "db.t3.micro",
             deleteAutomatedBackups: true
@@ -100,9 +100,9 @@ class dbStack extends AwsStackBase {
 }
 
 class taskDefinitionStack extends AwsStackBase {
-    public td: TaskDefinition;
-    constructor(scope: Constructor, id: string, props: BaseStackProps) {
-        super(scope,  `${props.name}-task-definition`
+    public td: EcsTaskDefinition;
+    constructor(scope: Construct, id: string, props: BaseStackProps) {
+        super(scope,  `${props.name}-task-definition`)
         this.td = new EcsTaskDefinition(this, `${props.name}-task-definition`, {
             family: `${props.name}-client`,
             memory: "512",
@@ -159,10 +159,10 @@ class loadBalancerStack extends AwsStackBase {
         super(scope, `${props.name}-security-group`)
 
         this.lb = new Alb (this, `${props.name}-load-balancer`, {
-            securityGroups: [securityGroupId],
+            securityGroups: [props.sg],
             namePrefix: "cl-",
             loadBalancerType: "application",
-            subnets: subnets.map((subnet) => subnet.id),
+            //subnets: subnets.map((subnet) => subnet.id),
             idleTimeout: 60,
             ipAddressType: "dualstack",
         })
@@ -171,7 +171,7 @@ class loadBalancerStack extends AwsStackBase {
           namePrefix: "cl-",
           port: 80,
           protocol: "HTTP",
-          vpcId,
+          //vpcId,
           deregistrationDelay: "30",
           targetType: "ip",
 
@@ -203,11 +203,11 @@ class loadBalancerStack extends AwsStackBase {
 }
 
 class EcsServiceStack extends AwsStackBase {
-    constructor(scope: Construct, id: string, props: BaseStackProps) {
+    constructor(scope: Construct, id: string, props: EcsServiceConfigs) {
         super(scope,`${props.name}-service` )
         new EcsService(this,`${props.name}-service`, {
-            cluster: props.cluster.arn,
-            taskDefinition: props.td.arn,
+            cluster: props.cluster,
+            taskDefinition: props.taskDefinition,
             desiredCount: 1,
             loadbalancer: [
                 {
@@ -217,33 +217,39 @@ class EcsServiceStack extends AwsStackBase {
                 },
             ],
             networkConfiguration: {
-                assignpublicIp: false,
-                securityGroups: [placeholder.sg.id]
+                assignPublicIp: false,
+                securityGroups: [props.securityGroup]
             }
 
         })
     }
 }
 
-const App = new App();
-const cluster = new EcsClusterStack(App, "ecs-cluster-stack", StackProps);
-const sGroup = new sgStack(App, "sg-stack", StackProps);
-const db = new dbStack(App, "db-stack", StackProps):
+const app = new App();
+const cluster = new EcsClusterStack(app, "ecs-cluster-stack", StackProps);
+const sGroup = new sgStack(app, "sg-stack", StackProps);
+const db = new dbStack(app, "db-stack", StackProps):
 
 const DbConfig: DbConfigs = {
+    name: "bmo-test",
+    project: "bmo-iac",
+    region: "us-east-2"
     dbName: db.db.address,
-    dbAddress: db.db.db_name,
+    dbAddress: db.db.dbName,
 }
 
-const taskDefinition = new taskDefinitionStack(App, "td-stack", DbConfig);
-const lb = new loadBalancerStack(App, "lb-stack", StackProps);
+const taskDefinition = new taskDefinitionStack(app, "td-stack", DbConfig);
+const lb = new loadBalancerStack(app, "lb-stack", StackProps);
 
 const EcsConfig: EcsServiceConfigs = {
+    name: "bmo-test",
+    project: "bmo-iac",
+    region: "us-east-2"
     cluster: cluster.cluster.arn,
     taskDefinition: taskDefinition.td.arn,
     targetGroup: lb.targetGroup.arn,
     securityGroup: sGroup.sg.id
 }
 
-new EcsServiceStack(App, "ecs-service-stack", EcsConfig);
-App.synth();
+new EcsServiceStack(app, "ecs-service-stack", EcsConfig);
+app.synth();
