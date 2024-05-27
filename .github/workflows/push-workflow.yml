@@ -36,7 +36,7 @@ jobs:
           cdktf --app "npx ts-node stacks.ts" synth
           STACKS=$(ls cdktf.out/stacks/)
           for stack in $STACKS; do
-            cdktf --app "npx ts-node stacks.ts" deploy $stack
+            cdktf --app "npx ts-node stacks.ts" deploy $stack --auto-approve
           done
         env:
           STATE_BUCKET: "none-your-business"
