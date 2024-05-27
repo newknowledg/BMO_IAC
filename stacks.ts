@@ -1,6 +1,7 @@
 import { Construct } from 'constructs';
 import * as cdktf from 'cdktf';
-import { App, Fn } from 'cdktf';
+import { ISynthesisSession, StackManifest, App, Fn } from 'cdktf';
+import { addCustomSynthesis } from 'cdktf/lib/synthesize/synthesizer';
 import { AwsProvider } from '@cdktf/provider-aws/lib/provider';
 import { IamRole } from '@cdktf/provider-aws/lib/iam-role';
 import { EcsService } from '@cdktf/provider-aws/lib/ecs-service';
