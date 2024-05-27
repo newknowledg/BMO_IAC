@@ -39,5 +39,6 @@ jobs:
             cdktf --app "npx ts-node stacks.ts" deploy "*" --auto-approve
           #done
         env:
-          STATE_BUCKET: "none-your-business"
+          vpcID: ${{ secrets.VPC_ID }}
+          STATE_BUCKET: ${{ secrets.BUCKET_NAME }}
 

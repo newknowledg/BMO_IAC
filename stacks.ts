@@ -263,6 +263,7 @@ class loadBalancerStack extends AwsStackBase {
             namePrefix: "cl-",
             loadBalancerType: "application",
             subnets: ["0.0.0.0/0"],
+            vpcId: `${process.env.vpcID}`
             idleTimeout: 60,
             ipAddressType: "dualstack",
         })
