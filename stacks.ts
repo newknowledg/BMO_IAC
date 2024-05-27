@@ -110,7 +110,7 @@ class dbStack extends AwsStackBase {
             username: `${process.env.USER}`,
             password: `${process.env.PASS}`,
             allocatedStorage : 8,
-            engine: "postgres",
+            engine: "mysql",
             publiclyAccessible: false,
             instanceClass: "db.t3.micro",
             skipFinalSnapshot: true,
