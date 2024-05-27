@@ -310,6 +310,7 @@ class EcsServiceStack extends AwsStackBase {
         })
         new EcsService(this,`${props.name}-service`, {
             cluster: props.cluster,
+            name: `${props.name}-service`,
             taskDefinition: props.taskDefinition,
             desiredCount: 1,
             launchType: "FARGATE",
