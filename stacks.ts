@@ -201,8 +201,8 @@ class taskDefinitionStack extends AwsStackBase {
 
         this.td = new EcsTaskDefinition(this, `${props.name}-task-definition`, {
             family: `${props.name}-client`,
-            memory: "512",
-            cpu: "256",
+            memory: "3072",
+            cpu: "1024",
             networkMode: "awsvpc",
             executionRoleArn: executionRole.arn,
             taskRoleArn: taskRole.arn,
@@ -215,7 +215,7 @@ class taskDefinitionStack extends AwsStackBase {
                 essential: true,
                 portMappings: [
                   {
-                    containerPort: 80,
+                    containerPort: 8080,
                     hostPort: 80,
                     protocol: "tcp",
                   },
