@@ -124,12 +124,87 @@ class taskDefinitionStack extends AwsStackBase {
             project: "bmo-iac",
             region: "us-east-2"
         })
+
+        const executionRole = new IamRole(this, `${props.name}-execution-role`, {
+          name: `${props.name}-execution-role`,
+          tags,
+          inlinePolicy: [
+            {
+              name: "allow-ecr-pull",
+              policy: JSON.stringify({
+                Version: "2012-10-17",
+                Statement: [
+                  {
+                    Effect: "Allow",
+                    Action: [
+                      "ecr:GetAuthorizationToken",
+                      "ecr:BatchCheckLayerAvailability",
+                      "ecr:GetDownloadUrlForLayer",
+                      "ecr:BatchGetImage",
+                      "logs:CreateLogStream",
+                      "logs:PutLogEvents",
+                    ],
+                    Resource: "*",
+                  },
+                ],
+              }),
+            },
+          ],
+          assumeRolePolicy: JSON.stringify({
+            Version: "2012-10-17",
+            Statement: [
+              {
+                Action: "sts:AssumeRole",
+                Effect: "Allow",
+                Sid: "",
+                Principal: {
+                  Service: "ecs-tasks.amazonaws.com",
+                },
+              },
+            ],
+          }),
+        });
+
+        const taskRole = new IamRole(this, `${props.name}-task-role`, {
+          name: `${props.name}-task-role`,
+          tags,
+          inlinePolicy: [
+            {
+              name: "allow-logs",
+              policy: JSON.stringify({
+                Version: "2012-10-17",
+                Statement: [
+                  {
+                    Effect: "Allow",
+                    Action: ["logs:CreateLogStream", "logs:PutLogEvents"],
+                    Resource: "*",
+                  },
+                ],
+              }),
+            },
+          ],
+          assumeRolePolicy: JSON.stringify({
+            Version: "2012-10-17",
+            Statement: [
+              {
+                Action: "sts:AssumeRole",
+                Effect: "Allow",
+                Sid: "",
+                Principal: {
+                  Service: "ecs-tasks.amazonaws.com",
+                },
+              },
+            ],
+          }),
+        });
+
         this.td = new EcsTaskDefinition(this, `${props.name}-task-definition`, {
             family: `${props.name}-client`,
             memory: "512",
             cpu: "256",
             networkMode: "awsvpc",
-            executionRoleArn: ,
+            executionRoleArn: executionRole.arn,
+            taskRoleArn: taskRole.arn,
 
             containerDefinitions: Fn.jsonencode([
               {
@@ -241,7 +316,7 @@ class EcsServiceStack extends AwsStackBase {
             launchType: "FARGATE",
             loadBalancer: [
                 {
-                    props.targetGroup.arn,
+                    targetGroupArn: props.targetGroup.arn,
                     containerName: props.name,
                     containerPort: 80,
                 },
