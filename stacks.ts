@@ -234,6 +234,7 @@ class taskDefinitionStack extends AwsStackBase {
                       "awslogs-region": props.region,
                       "awslogs-stream-prefix": props.name,
                     },
+                },
                 environment: [
                   {
                     name: "NAME",
