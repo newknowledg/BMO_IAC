@@ -35,7 +35,7 @@ jobs:
         run: |
           cdktf --app "npx ts-node stacks.ts" synth
           #cdktf --app "npx ts-node stacks.ts" deploy "*" --auto-approve
-          cdktf --app "npx ts-node stacks.ts" dewstroy "*" --auto-approve
+          cdktf --app "npx ts-node stacks.ts" destroy "*" --auto-approve
         env:
           VPC_ID: ${{ secrets.VPC_ID }}
           STATE_BUCKET: ${{ secrets.BUCKET_NAME }}
