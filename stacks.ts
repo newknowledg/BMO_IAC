@@ -271,7 +271,7 @@ class loadBalancerStack extends AwsStackBase {
           namePrefix: "cl-",
           port: 80,
           protocol: "HTTP",
-          vpcId: `${process.env.vpcID}`
+          vpcId: `${process.env.vpcID}`,
           deregistrationDelay: "30",
           targetType: "ip",
 
