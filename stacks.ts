@@ -199,6 +199,11 @@ class taskDefinitionStack extends AwsStackBase {
           }),
         });
 
+        const logGroup = new CloudwatchLogGroup(this, `${props.name}-loggroup`, {
+          name: `${props.name}-loggroup/${props.name}`,
+          retentionInDays: 30,
+        });
+
         this.td = new EcsTaskDefinition(this, `${props.name}-task-definition`, {
             family: `${props.name}-client`,
             memory: "3072",
@@ -220,6 +225,14 @@ class taskDefinitionStack extends AwsStackBase {
                     protocol: "tcp",
                   },
                 ],
+                logConfiguration: {
+                    logDriver: "awslogs",
+                    options: {
+                      // Defines the log
+                      "awslogs-group": logGroup.name,
+                      "awslogs-region": props.region,
+                      "awslogs-stream-prefix": props.name,
+                    },
                 environment: [
                   {
                     name: "NAME",
