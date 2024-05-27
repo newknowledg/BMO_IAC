@@ -88,8 +88,8 @@ class sgStack extends AwsStackBase {
             ingress: [
                 {
                     protocol: "TCP",
-                    fromPort: 8080,
-                    toPort: 8080,
+                    fromPort: 80,
+                    toPort: 80,
                     cidrBlocks: ["0.0.0.0/0"],
                     ipv6CidrBlocks: ["::/0"]
                 },
@@ -238,8 +238,8 @@ class taskDefinitionStack extends AwsStackBase {
                 essential: true,
                 portMappings: [
                   {
-                    containerPort: 8080,
-                    hostPort: 8080,
+                    containerPort: 80,
+                    hostPort: 80,
                     protocol: "tcp",
                   },
                 ],
@@ -271,7 +271,7 @@ class taskDefinitionStack extends AwsStackBase {
                   },
                   {
                     name: "WORDPRESS_DB_PORT",
-                    value: "8080",
+                    value: "80",
                   },
                   {
                     name: "WORDPRESS_DB_NAME",
@@ -287,7 +287,6 @@ class taskDefinitionStack extends AwsStackBase {
 class loadBalancerStack extends AwsStackBase {
     public lb: Alb;
     public lbl: AlbListener;
-    public lbl_two: AlbListener;
     public targetGroup: AlbTargetGroup;
     constructor(scope: Construct, id: string, props: LbConfigs) {
         super(scope, `${props.name}-${id}`, {
@@ -307,7 +306,7 @@ class loadBalancerStack extends AwsStackBase {
 
         this.targetGroup = new AlbTargetGroup(this,  `${props.name}-target-group`, {
           namePrefix: "cl-",
-          port: 8080,
+          port: 80,
           protocol: "HTTP",
           vpcId: `${process.env.VPC_ID}`,
           deregistrationDelay: "30",
@@ -326,30 +325,13 @@ class loadBalancerStack extends AwsStackBase {
 
         this.lbl = new AlbListener(this, `${props.name}-listener`, {
           loadBalancerArn: this.lb.arn,
-          port: 8080,
+          port: 80,
           protocol: "HTTP",
 
           defaultAction: [
             {
               type: "forward",
               targetGroupArn: this.targetGroup.arn,
-            },
-          ],
-        })
-
-        this.lbl_two = new AlbListener(this, `${props.name}-listener2`, {
-          loadBalancerArn: this.lb.arn,
-          port: 80,
-          protocol: "HTTP",
-
-          defaultAction: [
-            {
-              type: "redirect",
-              targetGroupArn: this.targetGroup.arn,
-              redirect: {
-                port: "8080",
-                statusCode: "HTTP_302",
-              },
             },
           ],
         })
@@ -375,7 +357,7 @@ class EcsServiceStack extends AwsStackBase {
                 {
                     targetGroupArn: props.targetGroup,
                     containerName: "client",
-                    containerPort: 8080,
+                    containerPort: 80,
                 },
             ],
             networkConfiguration: {
