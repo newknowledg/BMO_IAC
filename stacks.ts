@@ -229,7 +229,7 @@ class loadBalancerStack extends AwsStackBase {
 
 class EcsServiceStack extends AwsStackBase {
     constructor(scope: Construct, id: string, props: EcsServiceConfigs) {
-        super(scope,`${props.name}-service` , {
+        super(scope,`${props.name}-${id}` , {
             name: "bmo-test",
             project: "bmo-iac",
             region: "us-east-2"
@@ -238,7 +238,8 @@ class EcsServiceStack extends AwsStackBase {
             cluster: props.cluster,
             taskDefinition: props.taskDefinition,
             desiredCount: 1,
-            loadbalancer: [
+            launchType: "FARGATE",
+            loadBalancer: [
                 {
                     props.targetGroup.arn,
                     containerName: props.name,
