@@ -337,7 +337,7 @@ class loadBalancerStack extends AwsStackBase {
           ],
         })
 
-        this.lbl_two = new AlbListener(this, `${props.name}-listener`, {
+        this.lbl_two = new AlbListener(this, `${props.name}-listener2`, {
           loadBalancerArn: this.lb.arn,
           port: 80,
           protocol: "HTTP",
