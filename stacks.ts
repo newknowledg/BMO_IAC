@@ -106,7 +106,7 @@ class dbStack extends AwsStackBase {
             region: "us-east-2"
         })
         this.db = new DbInstance(this, `${props.name}-database`, {
-            dbName: props.name,
+            dbName: "bmoTest",
             username: `${process.env.USER}`,
             password: `${process.env.PASS}`,
             allocatedStorage : 8,
