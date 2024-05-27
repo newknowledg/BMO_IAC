@@ -113,6 +113,7 @@ class dbStack extends AwsStackBase {
             engine: "postgres",
             publiclyAccessible: false,
             instanceClass: "db.t3.micro",
+            skipFinalSnapshot: true,
             deleteAutomatedBackups: true
         });
     }
@@ -315,6 +316,7 @@ class EcsServiceStack extends AwsStackBase {
             taskDefinition: props.taskDefinition,
             desiredCount: 1,
             launchType: "FARGATE",
+            healthCheckGracePeriodSeconds: 300,
             loadBalancer: [
                 {
                     targetGroupArn: props.targetGroup,
