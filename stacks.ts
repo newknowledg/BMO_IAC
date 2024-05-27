@@ -5,6 +5,7 @@ import { AwsProvider } from '@cdktf/provider-aws/lib/provider';
 import { IamRole } from '@cdktf/provider-aws/lib/iam-role';
 import { EcsService } from '@cdktf/provider-aws/lib/ecs-service';
 import { EcsTaskDefinition} from '@cdktf/provider-aws/lib/ecs-task-definition';
+import { CloudwatchLogGroup} from '@cdktf/provider-aws/lib/cloudwatch-log-group';
 import { EcsCluster } from '@cdktf/provider-aws/lib/ecs-cluster';
 import { Alb } from '@cdktf/provider-aws/lib/alb';
 import { AlbTargetGroup } from '@cdktf/provider-aws/lib/alb-target-group';
