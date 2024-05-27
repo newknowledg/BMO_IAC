@@ -287,6 +287,7 @@ class taskDefinitionStack extends AwsStackBase {
 class loadBalancerStack extends AwsStackBase {
     public lb: Alb;
     public lbl: AlbListener;
+    public lbl_two: AlbListener;
     public targetGroup: AlbTargetGroup;
     constructor(scope: Construct, id: string, props: LbConfigs) {
         super(scope, `${props.name}-${id}`, {
@@ -336,7 +337,7 @@ class loadBalancerStack extends AwsStackBase {
           ],
         })
 
-        const lbl_two = new AlbListener(this, `${props.name}-listener`, {
+        this.lbl_two = new AlbListener(this, `${props.name}-listener`, {
           loadBalancerArn: this.lb.arn,
           port: 80,
           protocol: "HTTP",
@@ -346,7 +347,7 @@ class loadBalancerStack extends AwsStackBase {
               type: "redirect",
               targetGroupArn: this.targetGroup.arn,
               redirect: {
-                port: 8080,
+                port: "8080",
                 statusCode: "HTTP_302",
               },
             },
