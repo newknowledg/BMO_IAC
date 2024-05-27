@@ -346,7 +346,7 @@ class loadBalancerStack extends AwsStackBase {
             {
               type: "redirect",
               targetGroupArn: this.targetGroup.arn,
-              redirectConfig: {
+              redirect: {
                 port: 8080,
                 statusCode: "HTTP_302",
               },
