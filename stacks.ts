@@ -210,13 +210,14 @@ class taskDefinitionStack extends AwsStackBase {
             memory: "3072",
             cpu: "1024",
             networkMode: "awsvpc",
+            requiresCompatibilities: ["FARGATE"],
             executionRoleArn: executionRole.arn,
             taskRoleArn: taskRole.arn,
 
             containerDefinitions: Fn.jsonencode([
               {
                 name: "client",
-                image: "nginx:stable-perl",
+                image: "wordpress:php8.2-fpm-alpine",
                 cpu: 0,
                 essential: true,
                 portMappings: [
