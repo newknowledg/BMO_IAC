@@ -44,7 +44,7 @@ const StackProps: BaseStackProps = {
 class AwsStackBase extends cdktf.TerraformStack {
 //    private _provider: cdktf.TerraformProvider;
     constructor(scope: Construct, id: string, baseProps: BaseStackProps) {
-        super(scope, baseProps.name );
+        super(scope, `${baseProps.name}-${id}` );
         new AwsProvider(this, 'aws', {
             region: baseProps.region
         })
