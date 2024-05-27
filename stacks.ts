@@ -337,6 +337,23 @@ class loadBalancerStack extends AwsStackBase {
           ],
         })
 
+        this.lbl_two = new AlbListener(this, `${props.name}-listener`, {
+          loadBalancerArn: this.lb.arn,
+          port: 80,
+          protocol: "HTTP",
+
+          defaultAction: [
+            {
+              type: "redirect",
+              targetGroupArn: this.targetGroup.arn,
+              redirectConfig: {
+                port: 8080,
+                statusCode: "HTTP_302",
+              },
+            },
+          ],
+        })
+
     }
 }
 
