@@ -235,7 +235,6 @@ class taskDefinitionStack extends AwsStackBase {
               {
                 name: "client",
                 image: "wordpress:php8.2-fpm-alpine",
-                cpu: 0,
                 essential: true,
                 portMappings: [
                   {
