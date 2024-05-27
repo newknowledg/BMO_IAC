@@ -262,7 +262,7 @@ class loadBalancerStack extends AwsStackBase {
             securityGroups: [props.securityGroup],
             namePrefix: "cl-",
             loadBalancerType: "application",
-            //subnets: "0.0.0.0/0",
+            subnets: "0.0.0.0/0",
             idleTimeout: 60,
             ipAddressType: "dualstack",
         })
