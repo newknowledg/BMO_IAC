@@ -92,6 +92,13 @@ class sgStack extends AwsStackBase {
                     toPort: 8080,
                     cidrBlocks: ["0.0.0.0/0"],
                     ipv6CidrBlocks: ["::/0"]
+                },
+                {
+                    protocol: "TCP",
+                    fromPort: 80,
+                    toPort: 80,
+                    cidrBlocks: ["0.0.0.0/0"],
+                    ipv6CidrBlocks: ["::/0"]
                 }
             ],
             egress: [
