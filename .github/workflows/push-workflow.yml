@@ -39,6 +39,8 @@ jobs:
             cdktf --app "npx ts-node stacks.ts" deploy "*" --auto-approve
           #done
         env:
-          vpcID: ${{ secrets.VPC_ID }}
+          VPC_ID: ${{ secrets.VPC_ID }}
           STATE_BUCKET: ${{ secrets.BUCKET_NAME }}
+          SUBNET: ${{ secrets.SUBNET_ID }}
+
 

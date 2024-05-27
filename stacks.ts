@@ -262,7 +262,7 @@ class loadBalancerStack extends AwsStackBase {
             securityGroups: [props.securityGroup],
             namePrefix: "cl-",
             loadBalancerType: "application",
-            subnets: ["0.0.0.0/0"],
+            subnets: [`${process.env.SUBNET}`],
             idleTimeout: 60,
             ipAddressType: "dualstack",
         })
@@ -271,7 +271,7 @@ class loadBalancerStack extends AwsStackBase {
           namePrefix: "cl-",
           port: 80,
           protocol: "HTTP",
-          vpcId: `${process.env.vpcID}`,
+          vpcId: `${process.env.VPC_ID}`,
           deregistrationDelay: "30",
           targetType: "ip",
 
