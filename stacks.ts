@@ -315,12 +315,12 @@ class EcsServiceStack extends AwsStackBase {
             launchType: "FARGATE",
             loadBalancer: [
                 {
-                    targetGroupArn: props.targetGroup.arn,
+                    targetGroupArn: props.targetGroup,
                     containerName: props.name,
                     containerPort: 80,
                 },
             ],
-            EcsNetworkConfiguration: {
+            networkConfiguration: {
                 assignPublicIp: false,
                 subnets: ["0.0.0.0/0"],
                 securityGroups: [props.securityGroup]
