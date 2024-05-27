@@ -318,7 +318,7 @@ class EcsServiceStack extends AwsStackBase {
             loadBalancer: [
                 {
                     targetGroupArn: props.targetGroup,
-                    containerName: props.name,
+                    containerName: "client",
                     containerPort: 80,
                 },
             ],
