@@ -1,7 +1,6 @@
 import { Construct } from 'constructs';
 import * as cdktf from 'cdktf';
-import { ISynthesisSession, StackManifest, App, Fn } from 'cdktf';
-import { addCustomSynthesis } from 'cdktf/lib/synthesize/synthesizer';
+import { App, Fn } from 'cdktf';
 import { AwsProvider } from '@cdktf/provider-aws/lib/provider';
 import { IamRole } from '@cdktf/provider-aws/lib/iam-role';
 import { EcsService } from '@cdktf/provider-aws/lib/ecs-service';
@@ -49,10 +48,6 @@ class AwsStackBase extends cdktf.TerraformStack {
         new AwsProvider(this, 'aws', {
             region: baseProps.region
         })
-        addCustomSynthesis(this, {
-            onSynthesize: this.customSynthesis.bind(this),
-        });
-
         const bucketName =`${process.env.STATE_BUCKET}`
 
         new cdktf.S3Backend(this, {
@@ -61,22 +56,6 @@ class AwsStackBase extends cdktf.TerraformStack {
             region: `${baseProps.region}`
         });
 
-    }
-
-    private customSynthesis(session: ISynthesisSession): void {
-        // Create a type modifier and make the stack manifest mutable
-        type MutableStackManifest = {
-            -readonly [K in keyof StackManifest]: StackManifest[K]
-        }
-
-        // Get the manifest and make a mutable shallow copy
-        const manifestImmutable: StackManifest = session.manifest.forStack(this);
-        const manifestMutable: MutableStackManifest = manifestImmutable;
-
-        // Override the manifest's dependency references
-        manifestMutable.dependencies = this.dependencies.map((item) => item.node.id)
-
-        return;
     }
 
 }
