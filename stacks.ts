@@ -38,7 +38,7 @@ interface EcsServiceConfigs extends BaseStackProps {
 const StackProps: BaseStackProps = {
     name: "bmo-test",
     project: "bmo-iac",
-    region: "us-east-2"
+    region: "us-west-2"
 }
 
 class AwsStackBase extends cdktf.TerraformStack {
@@ -66,7 +66,7 @@ class EcsClusterStack extends AwsStackBase {
         super(scope, `${props.name}-${id}`, {
             name: "bmo-test",
             project: "bmo-iac",
-            region: "us-east-2"
+            region: "us-west-2"
         })
          this.cluster = new EcsCluster(this, `${props.name}-ecs-cluster`, {
             name: "bmo-iac-cluster"
@@ -80,7 +80,7 @@ class sgStack extends AwsStackBase {
         super(scope, `${props.name}-${id}`, {
             name: "bmo-test",
             project: "bmo-iac",
-            region: "us-east-2"
+            region: "us-west-2"
         })
         this.sg = new SecurityGroup(this,  `${props.name}-security-group`, {
             name: props.name,
@@ -103,7 +103,7 @@ class dbStack extends AwsStackBase {
         super(scope,  `${props.name}-${id}`, {
             name: "bmo-test",
             project: "bmo-iac",
-            region: "us-east-2"
+            region: "us-west-2"
         })
         this.db = new DbInstance(this, `${props.name}-database`, {
             dbName: props.name,
@@ -123,7 +123,7 @@ class taskDefinitionStack extends AwsStackBase {
         super(scope,  `${props.name}-${id}`, {
             name: "bmo-test",
             project: "bmo-iac",
-            region: "us-east-2"
+            region: "us-west-2"
         })
 
         const executionRole = new IamRole(this, `${props.name}-execution-role`, {
@@ -254,7 +254,7 @@ class loadBalancerStack extends AwsStackBase {
         super(scope, `${props.name}-${id}`, {
             name: "bmo-test",
             project: "bmo-iac",
-            region: "us-east-2"
+            region: "us-west-2"
         })
 
         this.lb = new Alb (this, `${props.name}-load-balancer`, {
@@ -306,7 +306,7 @@ class EcsServiceStack extends AwsStackBase {
         super(scope,`${props.name}-${id}` , {
             name: "bmo-test",
             project: "bmo-iac",
-            region: "us-east-2"
+            region: "us-west-2"
         })
         new EcsService(this,`${props.name}-service`, {
             cluster: props.cluster,
@@ -339,7 +339,7 @@ const db = new dbStack(app, "db-stack", StackProps);
 const DbConfig: DbConfigs = {
     name: "bmo-test",
     project: "bmo-iac",
-    region: "us-east-2",
+    region: "us-west-2",
     dbName: db.db.address,
     dbAddress: db.db.dbName,
 }
@@ -347,7 +347,7 @@ const DbConfig: DbConfigs = {
 const LbConfig: LbConfigs = {
     name: "bmo-test",
     project: "bmo-iac",
-    region: "us-east-2",
+    region: "us-west-2",
     securityGroup: sGroup.sg.id,
 }
 
@@ -357,7 +357,7 @@ const lb = new loadBalancerStack(app, "lb-stack", LbConfig);
 const EcsConfig: EcsServiceConfigs = {
     name: "bmo-test",
     project: "bmo-iac",
-    region: "us-east-2",
+    region: "us-west-2",
     cluster: cluster.cluster.arn,
     taskDefinition: taskDefinition.td.arn,
     targetGroup: lb.targetGroup.arn,
