@@ -308,7 +308,7 @@ class loadBalancerStack extends AwsStackBase {
 
           healthCheck: {
             enabled: true,
-            path: "/",
+            path: "/wp-admin/images/wordpress-logo.svg",
             healthyThreshold: 3,
             unhealthyThreshold: 3,
             timeout: 30,
