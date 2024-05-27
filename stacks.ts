@@ -234,7 +234,7 @@ class taskDefinitionStack extends AwsStackBase {
             containerDefinitions: Fn.jsonencode([
               {
                 name: "client",
-                image: "wordpress:php8.2-fpm-alpine",
+                image: "wordpress:latest",
                 essential: true,
                 portMappings: [
                   {
