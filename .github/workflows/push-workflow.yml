@@ -34,8 +34,8 @@ jobs:
       - name: CDKTF init
         run: |
           cdktf --app "npx ts-node stacks.ts" synth
-          #cdktf --app "npx ts-node stacks.ts" deploy "*" --auto-approve
-          cdktf --app "npx ts-node stacks.ts" destroy "*" --auto-approve
+          cdktf --app "npx ts-node stacks.ts" deploy "*" --auto-approve
+          #cdktf --app "npx ts-node stacks.ts" destroy "*" --auto-approve
         env:
           USER: ${{ secrets.DB_USER }}
           PASS: ${{ secrets.DB_PASS }}
