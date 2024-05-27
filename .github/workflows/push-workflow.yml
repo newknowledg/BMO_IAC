@@ -37,6 +37,8 @@ jobs:
           cdktf --app "npx ts-node stacks.ts" deploy "*" --auto-approve
           #cdktf --app "npx ts-node stacks.ts" destroy "*" --auto-approve
         env:
+          USER: ${{ secrets.DB_USER }}
+          PASS: ${{ secrets.DB_PASS }}
           VPC_ID: ${{ secrets.VPC_ID }}
           STATE_BUCKET: ${{ secrets.BUCKET_NAME }}
           SUBNET: ${{ secrets.SUBNET_ID }}

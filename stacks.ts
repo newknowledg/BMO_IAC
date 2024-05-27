@@ -227,7 +227,7 @@ class taskDefinitionStack extends AwsStackBase {
                   },
                   {
                     name: "WORDPRESS_DB_HOST",
-                    value: "props.dbAddress",
+                    value: props.dbAddress,
                   },
                   {
                     name: "WORDPRESS_DB_USER",
@@ -239,7 +239,7 @@ class taskDefinitionStack extends AwsStackBase {
                   },
                   {
                     name: "WORDPRESS_DB_NAME",
-                    value: "props.dbName",
+                    value: props.dbName,
                   }
                 ]
               }
