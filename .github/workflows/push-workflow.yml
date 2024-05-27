@@ -38,4 +38,6 @@ jobs:
           for stack in $STACKS; do
             cdktf --app "npx ts-node stacks.ts" deploy $stack
           done
+        env:
+          STATE_BUCKET: "none-your-business"
 
