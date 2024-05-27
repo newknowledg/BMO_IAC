@@ -234,8 +234,12 @@ class taskDefinitionStack extends AwsStackBase {
                     value: `${process.env.USER}`,
                   },
                   {
-                    name: " WORDPRESS_DB_PASSWORD",
+                    name: "WORDPRESS_DB_PASSWORD",
                     value: `${process.env.PASS}`,
+                  },
+                  {
+                    name: "WORDPRESS_DB_PASSWORD",
+                    value: "80",
                   },
                   {
                     name: "WORDPRESS_DB_NAME",
