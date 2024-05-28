@@ -7,9 +7,10 @@ on:
         description: Deploy or Destroy infrastructure
         required: true
         default: "deploy"
+        type: choice
         options:
-          - deploy
-          - destroy
+          - "deploy"
+          - "destroy"
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
