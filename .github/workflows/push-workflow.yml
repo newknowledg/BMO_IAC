@@ -25,7 +25,7 @@ jobs:
         run: |
           npm install -g cdktf-cli@latest --force
           npm install --force
-      - name: CDKTF init
+      - name: CDKTF Synth
         run: |
           cdktf --app "npx ts-node stacks.ts" synth
         env:
