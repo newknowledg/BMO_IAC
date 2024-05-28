@@ -37,7 +37,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
-      - name: CDKTF init
+      - name: CDKTF Deployment
         run: |
           cdktf --app "npx ts-node stacks.ts" synth
           cdktf --app "npx ts-node stacks.ts" ${{ inputs.deploymenttype }} "*" --auto-approve
