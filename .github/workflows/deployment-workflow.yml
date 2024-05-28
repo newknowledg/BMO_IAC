@@ -40,8 +40,8 @@ jobs:
           aws-region: us-east-2
       - name: CDKTF Deployment
         run: |
-          cdktf --app "npx ts-node stacks.ts" synth
-          cdktf --app "npx ts-node stacks.ts" ${{ inputs.deploymenttype }} "*" --auto-approve
+          cdktf --app "npx ts-node main.ts" synth
+          cdktf --app "npx ts-node main.ts" ${{ inputs.deploymenttype }} "*" --auto-approve
         env:
           USER: ${{ secrets.DB_USER }}
           PASS: ${{ secrets.DB_PASS }}

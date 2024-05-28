@@ -27,7 +27,7 @@ jobs:
           npm install --force
       - name: CDKTF Synth
         run: |
-          cdktf --app "npx ts-node stacks.ts" synth
+          cdktf --app "npx ts-node main.ts" synth
         env:
           USER: ${{ secrets.DB_USER }}
           PASS: ${{ secrets.DB_PASS }}

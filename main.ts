@@ -1,6 +1,7 @@
 import { Construct } from 'constructs';
 import * as cdktf from 'cdktf';
 import { App, Fn } from 'cdktf';
+//import { RemoteBackend } from 'cdktf'; // uncomment this line to use Terraform Cloud
 import { AwsProvider } from '@cdktf/provider-aws/lib/provider';
 import { IamRole } from '@cdktf/provider-aws/lib/iam-role';
 import { EcsService } from '@cdktf/provider-aws/lib/ecs-service';
@@ -404,4 +405,17 @@ const EcsConfig: EcsServiceConfigs = {
 }
 
 new EcsServiceStack(app, "ecs-service-stack", EcsConfig);
+
+// To deploy using Terraform Cloud comment out the above line
+// And uncomment the below block of lines
+
+/*const stack = new EcsServiceStack(app, "ecs-service-stack", EcsConfig);
+new RemoteBackend(stack, {
+  hostname: "app.terraform.io",
+  organization: process.env.CDKTF_ECS_TFC_ORGANIZATION || "",
+  workspaces: {
+    name: "ecs-microservices-cdktf"
+  }
+}); */
+
 app.synth();
