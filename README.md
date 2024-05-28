@@ -3,7 +3,7 @@
 ![ECS Microservices CDKTF-AWS](images/aws.png)
 ## Instructions
 This deployment uses user Access Keys.
- 1. In the secrest and variables Actions menu, place the following key pairs
+ 1. In the secrets and variables Actions menu, place the following key pairs
     1. AWS_ACCESS_KEY_ID: <AWS_ACCESS_KEY_ID>
     2. AWS_SECRET_ACCESS_KEY: <AWS_SECRET_ACCESS_KEY>
     3. DB_USER: <database_user_name>
