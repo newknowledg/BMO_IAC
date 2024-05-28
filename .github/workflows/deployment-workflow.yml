@@ -1,9 +1,15 @@
 name: "Push Workflow"
 
 on:
-  push:
-    branches:
-    - "*"
+  workflow_dispatch:
+    inputs:
+      deploymenttype:
+        description: Deploy or Destroy infrastructure
+        required: true
+        default: "deploy"
+        options:
+          - "deploy"
+          - "destroy"
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -25,9 +31,16 @@ jobs:
         run: |
           npm install -g cdktf-cli@latest --force
           npm install --force
+      - name: Config credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
       - name: CDKTF init
         run: |
           cdktf --app "npx ts-node stacks.ts" synth
+          cdktf --app "npx ts-node stacks.ts" ${{ inputs.deploymenttype }} "*" --auto-approve
         env:
           USER: ${{ secrets.DB_USER }}
           PASS: ${{ secrets.DB_PASS }}
