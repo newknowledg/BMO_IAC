@@ -8,8 +8,8 @@ on:
         required: true
         default: "deploy"
         options:
-          - "deploy"
-          - "destroy"
+          - deploy
+          - destroy
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
