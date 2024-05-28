@@ -3,7 +3,7 @@
 ![ECS Microservices CDKTF-AWS](images/aws.png)
 ## Instructions
 ### This deployment requires the use of user Access Keys.
-To deploy using deploy using Terraform Cloud, uncomment lines 4 and 412-419 in main.ts and comment out line 407.
+To deploy using deploy using Terraform Cloud, uncomment lines 4, 52-58 and 412-419 in main.ts and comment out line 407.
 
 Comment out Config credentials in .github/workflows/deployment-workflow.yml
 
